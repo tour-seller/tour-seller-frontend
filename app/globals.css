@@ -1,0 +1,316 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Sunlit coastal palette for a lighter travel-first interface. */
+    --background: 190 45% 98%;
+    --foreground: 205 61% 19%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 205 61% 19%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 205 61% 19%;
+
+    --primary: 193 72% 34%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 190 49% 94%;
+    --secondary-foreground: 205 61% 19%;
+
+    --muted: 190 49% 94%;
+    --muted-foreground: 204 17% 43%;
+
+    --accent: 13 83% 66%;
+    --accent-foreground: 205 61% 19%;
+
+    --destructive: 0 72% 46%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 190 31% 87%;
+    --input: 190 31% 87%;
+    --ring: 193 72% 34%;
+
+    --radius: 1rem;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  border-color: hsl(var(--border));
+}
+
+html {
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  color: hsl(var(--foreground));
+  background-color: #f4fbfc;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fixed grain keeps the pale coastal background tactile without adding visual weight. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(28, 138, 168, 0.12);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(28, 138, 168, 0.12);
+}
+
+.glass-dark {
+  background: rgba(12, 12, 11, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(12, 12, 11, 0.08);
+}
+
+/* Double-bezel helper */
+.bezel {
+  padding: 0.375rem;
+  border-radius: 2rem;
+  background: rgba(12, 12, 11, 0.04);
+  box-shadow: inset 0 0 0 1px rgba(12, 12, 11, 0.05);
+}
+
+.bezel-inner {
+  border-radius: calc(2rem - 0.375rem);
+  background: #fff;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.65);
+  overflow: hidden;
+}
+
+h1, h2, h3, .text-balance {
+  text-wrap: balance;
+}
+
+p, .text-pretty {
+  text-wrap: pretty;
+}
+
+input, select, textarea {
+  font-size: 16px;
+}
+@media (min-width: 640px) {
+  input, select, textarea {
+    font-size: inherit;
+  }
+}
+
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f0f0ee;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c8c8c4;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9a9a96;
+}
+
+.baonoidung {
+  line-height: 1.8;
+  color: #3f3f3c;
+}
+
+.baonoidung h1,
+.baonoidung h2,
+.baonoidung h3,
+.baonoidung h4 {
+  color: #0c0c0b;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.baonoidung p {
+  margin-bottom: 1rem;
+}
+
+.baonoidung img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem auto;
+}
+
+.baonoidung ul,
+.baonoidung ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.baonoidung li {
+  margin-bottom: 0.5rem;
+}
+
+/* ─── Scroll-driven header collapse ─── */
+/*
+ * The header has a fixed total height in BOTH states so the page below it
+ * never shifts around mid-scroll. The "collapse" is achieved purely with
+ * transform + opacity (no reflow), and the MainMenu's sticky `top` is
+ * driven by a CSS variable that follows the header's actual height.
+ */
+.header-shell {
+  --header-height: 7rem; /* announce + main, default (mobile uses 4rem main) */
+  transition:
+    background-color 0.5s cubic-bezier(0.32, 0.72, 0, 1),
+    box-shadow 0.5s cubic-bezier(0.32, 0.72, 0, 1),
+    border-color 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@media (min-width: 768px) {
+  .header-shell {
+    --header-height: 8.5rem; /* announce (≈2.5rem) + main (5rem) + a touch of slack */
+  }
+}
+
+[data-scrolled] .header-shell {
+  --header-height: 5rem; /* main only on desktop */
+  background-color: rgba(255, 255, 255, 0.96);
+  box-shadow:
+    0 1px 0 0 rgba(12, 12, 11, 0.05),
+    0 4px 20px -4px rgba(12, 12, 11, 0.08);
+}
+
+@media (min-width: 768px) {
+  [data-scrolled] .header-shell {
+    --header-height: 5rem;
+  }
+}
+
+/* Announce strip: hidden via transform/opacity, never affects layout. */
+.header-announce {
+  transform-origin: top;
+  transform: translateZ(0); /* promote to its own layer for smooth animation */
+  transition:
+    transform 0.4s cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 0.3s cubic-bezier(0.32, 0.72, 0, 1),
+    visibility 0s linear 0.3s;
+  will-change: transform, opacity;
+}
+
+[data-scrolled] .header-announce {
+  transform: translateY(-100%);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    transform 0.4s cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 0.3s cubic-bezier(0.32, 0.72, 0, 1),
+    visibility 0s linear 0.4s;
+  pointer-events: none;
+}
+
+/* ─── MainMenu sticky float ─── */
+/*
+ * `top` follows the header's actual height via --header-height so the
+ * menu sticks exactly under the header in both states. This eliminates
+ * the overlap / gap that caused the menu to "jump" while the announce
+ * strip was animating.
+ */
+.main-menu-sticky {
+  top: var(--header-height, 5rem);
+  transition:
+    top 0.4s cubic-bezier(0.32, 0.72, 0, 1),
+    transform 0.45s cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@media (min-width: 1024px) {
+  .main-menu-sticky nav > a:first-child {
+    display: none;
+  }
+
+  .main-menu-sticky nav {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    flex: 1;
+    min-width: 0;
+    gap: 0.25rem;
+  }
+
+  .main-menu-sticky nav > a,
+  .main-menu-sticky nav > div {
+    flex: none;
+    min-width: 0;
+    width: 100%;
+    height: 3.5rem;
+  }
+
+  .main-menu-sticky nav > a,
+  .main-menu-sticky nav > div > a,
+  .main-menu-sticky nav > div > button {
+    width: 100%;
+    height: 3.5rem;
+    min-height: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.15;
+    white-space: nowrap;
+  }
+
+  .main-menu-sticky form {
+    flex: 0 0 14rem;
+    margin-left: 0.5rem;
+  }
+}
+
+/* Mobile menu trigger bar — also follows the live header height so it
+ * never overlaps the header while the announce strip animates. */
+.main-menu-mobile {
+  top: var(--header-height, 4rem);
+  transition: top 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+}
